@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .table-control {
+    @apply border-2 text-center;
+  }
+  .btn-border-purple {
+    @apply border-purple-700 border-2 hover:border-purple-500 hover:bg-purple-500 rounded-md px-3 py-2;
+  }
+}

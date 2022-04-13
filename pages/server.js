@@ -2,6 +2,7 @@ import ListMaker from "../components/server/ListMaker";
 import ResultsTable from "../components/server/ResultsTable";
 import HeadInject from "../components/shared/HeadInject";
 import { cons, juds, cris } from "../components/shared/endpoints";
+import MiscMaker from "../components/server/MiscMaker";
 
 export default function server() {
   return (
@@ -11,11 +12,10 @@ export default function server() {
           <ListMaker title="Contestants" endpoint={cons} />
           <ListMaker title="Judges" endpoint={juds} />
           <ListMaker title="Criteria" endpoint={cris} />
+          <MiscMaker title="Miscellaneous" />
         </div>
 
-        <div className="border rounded-md p-2 mt-2 border-gray-200 bg-white">
-          <ResultsTable />
-        </div>
+        <ResultsTable />
       </div>
     </HeadInject>
   );

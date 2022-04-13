@@ -1,29 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getCris } from "./APIcalls";
+import Scoresheet from "./Scoresheet";
 
 export default function Container() {
-  const [rawScores, setRawScores] = useState([]);
+  const [cris, setCris] = useState([]);
+  const [activeCri, setActiveCri] = useState(null);
+  useEffect(() => {
+    getCris(setCris);
+  }, []);
 
+  if (cris.length === 0) return null;
   return (
     <div className="lg:mx-36">
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-1 mb-5">
-        <button className="btn-border-purple">09</button>
-        <button className="btn-border-purple">09</button>
-        <button className="btn-border-purple">09</button>
-        <button className="btn-border-purple">09</button>
-        <button className="btn-border-purple">09</button>
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-1 mb-3">
+        {cris.map((q, i) => {
+          return (
+            <button
+              key={q.id}
+              className={`${activeCri === i ? "active-btn-purple" : "btn-border-purple"} font-extrabold tracking-wide`}
+              onClick={() => setActiveCri(i)}>
+              {q.attributes.name}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="flex mb-1">
-        <div className="flex-none border-2 px-2 py-1 text-center border-gray-400 rounded-l-md">99</div>
-        <div className="flex-auto border-2 text-center border-gray-400 border-x-0">
-          <ScoreInput />
-        </div>
-        <div className="flex-none border-2 px-2 py-1 text-center border-gray-400 rounded-r-md">99</div>
-      </div>
+      <div className="font-bold text-xl">{`My ${
+        activeCri !== null ? cris[activeCri].attributes.name : ""
+      } Scoresheet`}</div>
+      <div className="italic text-gray-600 text-sm mb-2">Contestant No. | Score | Rank</div>
+
+      {activeCri !== null ? (
+        <Scoresheet cris={cris[activeCri].id} />
+      ) : (
+        <div className="italic text-red-500 tracking-widest">--- Select a Segment ---</div>
+      )}
     </div>
   );
-}
-
-function ScoreInput() {
-  return <input className="bg-inherit h-full w-full text-center" type="number" min={1} max={10} />;
 }

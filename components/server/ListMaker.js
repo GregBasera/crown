@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { RefreshOutline, TrashOuline, PencilOutline, ArrowRightOutline, CloseOutline } from "../shared/Icons";
-import TextInput from "./TextInput";
 import { getList, createListItem, delListItem, updateListItem } from "./APIcalls";
 
 export default function ListMaker({ title, endpoint }) {
@@ -21,14 +20,21 @@ export default function ListMaker({ title, endpoint }) {
     setFocused(null);
     refreshList();
   };
-  const listChanges = (e, i) => {
+  const listChanges = (e, i, q) => {
     let copy = list.slice();
-    copy[i].attributes.name = e.target.value;
+    if (q === "cnum") copy[i].attributes.con_number = e.target.value;
+    if (q === "name") copy[i].attributes.name = e.target.value;
     setList(copy);
     setFocused(i);
   };
   const sendUpdate = (listIndex, dbID) => {
-    updateListItem(list[focused].attributes.name, dbID, listIndex, title.toLowerCase().substring(0, 3), cancelUpdate);
+    updateListItem(
+      list[focused].attributes.name,
+      list[focused].attributes.con_number,
+      dbID,
+      title.toLowerCase().substring(0, 3),
+      cancelUpdate
+    );
   };
   // create
   const listDraft = (e) => {
@@ -69,9 +75,18 @@ export default function ListMaker({ title, endpoint }) {
         {list.map((item, index) => {
           return (
             <div key={item.id} className="flex items-center mx-3 my-2">
+              {/* visible only on Contestants view */}
+              {title === "Contestants" && (
+                <div className="flex-a">
+                  <ConNumber value={item.attributes.con_number ?? 0} onChange={listChanges} indx={index} />
+                </div>
+              )}
+              {/* textfield / display --> cRud --- visible everytime */}
               <div className="flex-auto">
-                <TextInput value={item.attributes.name} onChange={listChanges} indx={index} dbID={item.id} />
+                <TextInput value={item.attributes.name} onChange={listChanges} indx={index} />
               </div>
+
+              {/* button for editing --> crUd --- visible when not onupdate */}
               <button
                 className={`${
                   focused === index ? "flex-none" : "hidden"
@@ -79,6 +94,8 @@ export default function ListMaker({ title, endpoint }) {
                 onClick={() => sendUpdate(index, item.id)}>
                 <PencilOutline />
               </button>
+
+              {/* button for deleting --> cruD --- visible when not onupdate */}
               <button
                 className={`${
                   focused === index ? "hidden" : "flex-none"
@@ -86,6 +103,8 @@ export default function ListMaker({ title, endpoint }) {
                 onClick={() => deleteListItem(item.id, index)}>
                 <TrashOuline />
               </button>
+
+              {/* button for canceling update --- visible only onupdate*/}
               <button
                 className={`${
                   focused === index ? "flex-none" : "hidden"
@@ -96,6 +115,8 @@ export default function ListMaker({ title, endpoint }) {
             </div>
           );
         })}
+
+        {/* textfield for adding --> Crud --- visible when onAddButtonClicked */}
         <div className={`${addingNew ? "flex" : "hidden"} items-center mx-3 my-2`}>
           <button
             className="flex-none mr-1 p-0.5 bg-gray-200 hover:bg-gray-400 rounded-full"
@@ -111,6 +132,7 @@ export default function ListMaker({ title, endpoint }) {
         </div>
       </div>
 
+      {/* Add button */}
       <hr />
       <button
         className="w-full py-1 rounded-b-md text-center bg-blue-500 hover:bg-blue-700 text-white"
@@ -118,5 +140,27 @@ export default function ListMaker({ title, endpoint }) {
         Add another...
       </button>
     </div>
+  );
+}
+
+function ConNumber({ value, onChange, indx }) {
+  return (
+    <input
+      className="border border-gray focus:outline-none block w-20 px-3 py-1 rounded-md"
+      type="number"
+      value={value}
+      onChange={() => onChange(event, indx, "cnum")}
+    />
+  );
+}
+
+function TextInput({ value, onChange, indx }) {
+  return (
+    <input
+      className="border border-gray focus:outline-none block w-full px-3 py-1 rounded-md"
+      type="text"
+      value={value}
+      onChange={() => onChange(event, indx, "name")}
+    />
   );
 }

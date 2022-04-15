@@ -148,7 +148,7 @@ export function getAllLists(callback) {
     });
 }
 
-export function getMisc(callback) {
+export function getMisc(callback1, callback2) {
   axios({
     url: gqlendpoint,
     method: "POST",
@@ -157,6 +157,7 @@ export function getMisc(callback) {
         misc{ data {
           attributes{
             client_token
+            server_token
           }
         }}
       }`,
@@ -164,7 +165,8 @@ export function getMisc(callback) {
   })
     .then((res) => {
       if (res.status === 200) {
-        callback(res.data.data.misc.data.attributes.client_token);
+        callback1(res.data.data.misc.data.attributes.client_token);
+        callback2(res.data.data.misc.data.attributes.server_token);
       } else {
         console.log(res);
       }
@@ -174,13 +176,13 @@ export function getMisc(callback) {
     });
 }
 
-export function updateMisc(client_token) {
+export function updateMisc(client_token, server_token) {
   axios({
     url: gqlendpoint,
     method: "POST",
     data: {
       query: `mutation{
-        updateMisc(data: { client_token: "${client_token}" }) {
+        updateMisc(data: { client_token: "${client_token}", server_token: "${server_token}" }) {
           data{
             attributes{
               client_token

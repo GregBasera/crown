@@ -4,8 +4,9 @@ import { getMisc, updateMisc } from "./APIcalls";
 
 export default function MiscMaker({ title }) {
   const [clientToken, setClientToken] = useState("");
+  const [serverToken, setServerToken] = useState("");
   useEffect(() => {
-    getMisc(setClientToken);
+    getMisc(setClientToken, setServerToken);
   }, []);
 
   const refreshList = () => {
@@ -13,7 +14,11 @@ export default function MiscMaker({ title }) {
   };
   const clientTokenChenges = (e) => {
     setClientToken(e.target.value);
-    updateMisc(e.target.value);
+    updateMisc(e.target.value, serverToken);
+  };
+  const serverTokenChenges = (e) => {
+    setServerToken(e.target.value);
+    updateMisc(clientToken, e.target.value);
   };
 
   return (
@@ -37,7 +42,7 @@ export default function MiscMaker({ title }) {
         <small className="mx-4">Server Token</small>
         <div className="flex items-center mx-3 mb-1">
           <div className="flex-auto">
-            <TextInput />
+            <TextInput value={serverToken} onChange={serverTokenChenges} />
           </div>
         </div>
 

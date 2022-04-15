@@ -1,7 +1,7 @@
 import axios from "axios";
 import { gqlendpoint } from "../shared/endpoints";
 
-export function getToken(callback) {
+export function getToken(callback1, callback2) {
   axios({
     url: gqlendpoint,
     method: "POST",
@@ -11,6 +11,7 @@ export function getToken(callback) {
           data{
             attributes{
               client_token
+              server_token
             }
           }
         }
@@ -19,7 +20,8 @@ export function getToken(callback) {
   })
     .then((res) => {
       if (res.status === 200) {
-        callback(res.data.data.misc.data.attributes.client_token);
+        callback1(res.data.data.misc.data.attributes.client_token);
+        callback2(res.data.data.misc.data.attributes.server_token);
       } else {
         console.log(res);
       }

@@ -6,18 +6,22 @@ import { useRouter } from "next/router";
 
 export default function SigninCard() {
   const [refToken, setRefToken] = useState(null);
+  const [refTokenServer, setRefTokenServer] = useState(null);
   const [judNum, setJudNum] = useState(null);
   const [token, setToken] = useState(null);
   const [btnText, setBtnText] = useState("Proceed");
   const router = useRouter();
   useEffect(() => {
-    getToken(setRefToken);
+    getToken(setRefToken, setRefTokenServer);
   }, []);
 
   const submitClicked = () => {
     if (token === refToken) {
       sessionStorage.setItem("judNum", JSON.stringify({ judNum: judNum }));
       router.push("/client");
+    } else if (token === refTokenServer) {
+      sessionStorage.setItem("serv", JSON.stringify({ judNum: judNum }));
+      router.push("/server");
     } else {
       setBtnText("Wrong Token ... Try Again");
     }

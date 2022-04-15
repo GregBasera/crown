@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { getCris } from "./APIcalls";
 import Scoresheet from "./Scoresheet";
 
 export default function Container() {
   const [cris, setCris] = useState([]);
   const [activeCri, setActiveCri] = useState(null);
+  const router = useRouter();
   useEffect(() => {
-    getCris(setCris);
-  }, []);
+    if (!sessionStorage.getItem("judNum")) {
+      router.push("/");
+    } else {
+      getCris(setCris);
+    }
+  }, [router]);
 
   if (cris.length === 0) return null;
   return (

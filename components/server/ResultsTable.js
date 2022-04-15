@@ -5,6 +5,8 @@ export default function ResultsTable() {
   const [allList, setAllList] = useState({ cons: { data: [] }, juds: { data: [] }, cris: { data: [] } });
   const [scores, setScores] = useState([]);
   const [showRawScores, setShowRawScores] = useState(false);
+  let ontheflyArray = [];
+  const [finalRanks, setFinalRanks] = useState([]);
   useEffect(() => {
     getAllLists(setAllList);
     getAllScores(setScores);
@@ -23,6 +25,16 @@ export default function ResultsTable() {
     let targetIndex = judFiltered.indexOf(targeted[0]);
 
     return ranks.length !== 0 ? ranks[targetIndex] : "-";
+  };
+  const passbyCopy = (num) => {
+    ontheflyArray.push(num);
+    return num;
+  };
+  const showFinalRanks = () => {
+    let arr = ontheflyArray;
+    let sorted = arr.slice().sort((a, b) => a - b);
+    let ranks = arr.map((v) => sorted.indexOf(v) + 1);
+    setFinalRanks(ranks);
   };
 
   if (scores.length === 0) return null;
@@ -47,8 +59,9 @@ export default function ResultsTable() {
         <THeadBuilder lists={allList} />
 
         <tbody>
-          {allList.cons.data.map((i) => {
+          {allList.cons.data.map((i, conIndex) => {
             let conFiltered = scores.filter((el) => el.attributes.con === i.attributes.con_number.toString()); // mini drill
+            let lowerIsBetter = 0;
 
             return (
               <tr key={i.id} className="table-control">
@@ -59,6 +72,8 @@ export default function ResultsTable() {
 
                   return allList.juds.data.map((q) => {
                     let judFiltered = criFiltered.filter((el) => el.attributes.jud === q.id); // mini drill
+                    let temp = distRanks(i.attributes.con_number.toString(), w.id, q.id);
+                    lowerIsBetter += Number.isInteger(temp) ? temp : 0;
 
                     return showRawScores ? (
                       <td key={q.id} className="table-control">
@@ -71,6 +86,13 @@ export default function ResultsTable() {
                     );
                   });
                 })}
+
+                <td className="table-control">{passbyCopy(lowerIsBetter)}</td>
+                {/* SCORES render horizontally; but we need to capture data vertically */}
+                {/* to accomodate for the timings we use USER intervention -> onclick */}
+                <td className="table-control cursor-pointer" onClick={showFinalRanks}>
+                  {finalRanks.length !== 0 ? finalRanks[conIndex] : "Click Me"}
+                </td>
               </tr>
             );
           })}

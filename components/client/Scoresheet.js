@@ -28,8 +28,8 @@ export default function Scoresheet({ cris }) {
       updateScores(scoreID, parseInt(e.target.value));
     } else {
       createScores(con, cri, jud, parseInt(e.target.value));
+      getScores(cris, JSON.parse(sessionStorage.getItem("judNum")).judNum, setScores, setRanks);
     }
-    getScores(cris, JSON.parse(sessionStorage.getItem("judNum")).judNum, setScores, setRanks);
   };
 
   if (cons.length === 0) return null;

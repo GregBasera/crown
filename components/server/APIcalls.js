@@ -148,7 +148,7 @@ export function getAllLists(callback) {
     });
 }
 
-export function getMisc(callback1, callback2) {
+export function getMisc(callback1, callback2, callback3) {
   axios({
     url: gqlendpoint,
     method: "POST",
@@ -158,6 +158,7 @@ export function getMisc(callback1, callback2) {
           attributes{
             client_token
             server_token
+            finalist_number
           }
         }}
       }`,
@@ -165,8 +166,9 @@ export function getMisc(callback1, callback2) {
   })
     .then((res) => {
       if (res.status === 200) {
-        callback1(res.data.data.misc.data.attributes.client_token);
-        callback2(res.data.data.misc.data.attributes.server_token);
+        callback1 && callback1(res.data.data.misc.data.attributes.client_token);
+        callback2 && callback2(res.data.data.misc.data.attributes.server_token);
+        callback3 && callback3(res.data.data.misc.data.attributes.finalist_number);
       } else {
         console.log(res);
       }
@@ -176,13 +178,13 @@ export function getMisc(callback1, callback2) {
     });
 }
 
-export function updateMisc(client_token, server_token) {
+export function updateMisc(client_token, server_token, finalistNum) {
   axios({
     url: gqlendpoint,
     method: "POST",
     data: {
       query: `mutation{
-        updateMisc(data: { client_token: "${client_token}", server_token: "${server_token}" }) {
+        updateMisc(data: { client_token: "${client_token}", server_token: "${server_token}", finalist_number: ${finalistNum} }) {
           data{
             attributes{
               client_token
@@ -227,6 +229,76 @@ export function getAllScores(callback) {
         callback(res.data.data.scores.data);
       } else {
         console.log(res);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+export function getRawFinalistData(callback) {
+  axios({
+    url: gqlendpoint,
+    method: "POST",
+    data: {
+      query: `query{ misc{ data{
+        attributes{ rawFinalistData }
+      }}}`,
+    },
+  })
+    .then((res) => {
+      if (res.status === 200) {
+        let conFinalistIDs = res.data.data.misc.data.attributes.rawFinalistData;
+        // get indexes of finalists; if successful, get cons using results gotten
+        axios({
+          url: gqlendpoint,
+          method: "POST",
+          data: {
+            query: `query{ cons(filters: { id: { in: [${conFinalistIDs}] } }) {
+              data { id attributes { name }
+            }}}`,
+          },
+        })
+          .then((res1) => {
+            if (res1.status === 200) {
+              callback(res1.data.data.cons.data);
+            } else {
+              console.log(res1);
+            }
+          })
+          .catch((err1) => {
+            console.log(err1);
+          });
+      } else {
+        console.log(res);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+export function updateRawFinalistData(data) {
+  axios({
+    url: gqlendpoint,
+    method: "POST",
+    data: {
+      query: `mutation{
+        updateMisc(data: { rawFinalistData: "${data}" }) {
+          data{
+            attributes{
+              rawFinalistData
+            }
+          }
+        }
+      }`,
+    },
+  })
+    .then((res) => {
+      if (res.status === 200) {
+        // ignore
+      } else {
+        // ignore
       }
     })
     .catch((err) => {

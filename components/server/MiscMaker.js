@@ -5,20 +5,25 @@ import { getMisc, updateMisc } from "./APIcalls";
 export default function MiscMaker({ title }) {
   const [clientToken, setClientToken] = useState("");
   const [serverToken, setServerToken] = useState("");
+  const [finalistNum, setFinalistNum] = useState(0);
   useEffect(() => {
-    getMisc(setClientToken, setServerToken);
+    getMisc(setClientToken, setServerToken, setFinalistNum);
   }, []);
 
   const refreshList = () => {
     getMisc(setClientToken);
   };
-  const clientTokenChenges = (e) => {
+  const clientTokenChanges = (e) => {
     setClientToken(e.target.value);
-    updateMisc(e.target.value, serverToken);
+    updateMisc(e.target.value, serverToken, finalistNum);
   };
-  const serverTokenChenges = (e) => {
+  const serverTokenChanges = (e) => {
     setServerToken(e.target.value);
-    updateMisc(clientToken, e.target.value);
+    updateMisc(clientToken, e.target.value, finalistNum);
+  };
+  const finalistNumChanges = (e) => {
+    setFinalistNum(e.target.value);
+    updateMisc(clientToken, serverToken, e.target.value);
   };
 
   return (
@@ -35,21 +40,21 @@ export default function MiscMaker({ title }) {
         <small className="mx-4">Client Token</small>
         <div className="flex items-center mx-3 mb-1">
           <div className="flex-auto">
-            <TextInput value={clientToken} onChange={clientTokenChenges} />
+            <TextInput value={clientToken} onChange={clientTokenChanges} />
           </div>
         </div>
 
         <small className="mx-4">Server Token</small>
         <div className="flex items-center mx-3 mb-1">
           <div className="flex-auto">
-            <TextInput value={serverToken} onChange={serverTokenChenges} />
+            <TextInput value={serverToken} onChange={serverTokenChanges} />
           </div>
         </div>
 
         <small className="mx-4">Number of Finalists</small>
         <div className="flex items-center mx-3 mb-1">
           <div className="flex-auto">
-            <TextInput />
+            <TextInput value={finalistNum} onChange={finalistNumChanges} />
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { getAllLists, getAllScores } from "./APIcalls";
+import { getAllLists, getAllScores, updateRawFinalistData, getMisc } from "./APIcalls";
+import FinalistTable from "./FinalistTable";
 
 export default function ResultsTable() {
   const [allList, setAllList] = useState({ cons: { data: [] }, juds: { data: [] }, cris: { data: [] } });
@@ -7,9 +8,11 @@ export default function ResultsTable() {
   const [showRawScores, setShowRawScores] = useState(false);
   let ontheflyArray = [];
   const [finalRanks, setFinalRanks] = useState([]);
+  const [finalList, setFinalList] = useState(0);
   useEffect(() => {
     getAllLists(setAllList);
     getAllScores(setScores);
+    getMisc(null, null, setFinalList);
   }, []);
 
   const distRanks = (q, w, e) => {
@@ -35,6 +38,14 @@ export default function ResultsTable() {
     let sorted = arr.slice().sort((a, b) => a - b);
     let ranks = arr.map((v) => sorted.indexOf(v) + 1);
     setFinalRanks(ranks);
+
+    // getting as much function from this
+    // prep-ing finalist table
+    let newFinalList = [];
+    ranks.forEach((q, index) => {
+      if (q <= finalList) newFinalList.push(allList.cons.data[index].id);
+    });
+    updateRawFinalistData(newFinalList);
   };
 
   if (scores.length === 0) return null;
@@ -98,6 +109,8 @@ export default function ResultsTable() {
           })}
         </tbody>
       </table>
+
+      <FinalistTable />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { getCris } from "./APIcalls";
 import Scoresheet from "./Scoresheet";
+import CoronationSheet from "./CoronationSheet";
 
 export default function Container() {
   const [cris, setCris] = useState([]);
@@ -29,17 +30,25 @@ export default function Container() {
             </button>
           );
         })}
+        <button
+          className={`${
+            activeCri === cris.length + 1 ? "active-btn-purple" : "btn-border-purple"
+          } font-extrabold tracking-wide`}
+          onClick={() => setActiveCri(cris.length + 1)}>
+          Coronation
+        </button>
       </div>
 
       <div className="font-bold text-xl">{`My ${
-        activeCri !== null ? cris[activeCri].attributes.name : ""
+        cris[activeCri] ? cris[activeCri].attributes.name : "Coronation"
       } Scoresheet`}</div>
       <div className="italic text-gray-600 text-sm mb-2">Contestant No. | Score | Rank</div>
 
-      {activeCri !== null ? (
+      {cris[activeCri] ? (
         <Scoresheet cris={cris[activeCri].id} />
       ) : (
-        <div className="italic text-red-500 tracking-widest">--- Select a Segment ---</div>
+        <CoronationSheet fp={activeCri === null} />
+        // <div className="italic text-red-500 tracking-widest">--- Select a Segment ---</div>
       )}
     </div>
   );

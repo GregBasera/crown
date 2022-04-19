@@ -255,7 +255,7 @@ export function getRawFinalistData(callback) {
           method: "POST",
           data: {
             query: `query{ cons(filters: { id: { in: [${conFinalistIDs}] } }) {
-              data { id attributes { name }
+              data { id attributes { name con_number }
             }}}`,
           },
         })
@@ -299,6 +299,32 @@ export function updateRawFinalistData(data) {
         // ignore
       } else {
         // ignore
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+export function getFinalistScores(callback) {
+  axios({
+    url: gqlendpoint,
+    method: "POST",
+    data: {
+      query: `query{
+        scores(filters: { cri: { eq: "-1" } }) {
+          data { id attributes {
+            con jud cri raw_score
+          }}
+        }
+      }`,
+    },
+  })
+    .then((res) => {
+      if (res.status === 200) {
+        callback(res.data.data.scores.data);
+      } else {
+        console.log(res);
       }
     })
     .catch((err) => {

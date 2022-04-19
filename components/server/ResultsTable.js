@@ -76,7 +76,11 @@ export default function ResultsTable() {
 
             return (
               <tr key={i.id} className="table-control">
-                <th className="table-control-th">{i.attributes.name}</th>
+                {showRawScores ? (
+                  <th className="table-control-th">{i.attributes.name}</th>
+                ) : (
+                  <th className="table-control-th">{`N.${i.attributes.con_number}`}</th>
+                )}
 
                 {allList.cris.data.map((w) => {
                   let criFiltered = conFiltered.filter((el) => el.attributes.cri === w.id); // mini drill
@@ -120,7 +124,7 @@ function THeadBuilder({ lists }) {
     <thead>
       <tr className="table-control">
         <th className="table-control-th" rowSpan={2}>
-          Contestants
+          Conts.
         </th>
         {lists.cris.data.map((i) => {
           return (
@@ -130,7 +134,7 @@ function THeadBuilder({ lists }) {
           );
         })}
         <th className="table-control-th" rowSpan={2}>
-          Total
+          Sum
         </th>
         <th className="table-control-th" rowSpan={2}>
           Final Ranks

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getAllLists, getAllScores, updateRawFinalistData, getMisc } from "./APIcalls";
 import FinalistTable from "./FinalistTable";
+import { PrinterOutline, RefreshOutline } from "../shared/Icons";
 
 export default function ResultsTable() {
   const [allList, setAllList] = useState({ cons: { data: [] }, juds: { data: [] }, cris: { data: [] } });
@@ -64,6 +65,12 @@ export default function ResultsTable() {
             <small>Show Raw Scores</small>
           </label>
         </div>
+        <button className="flex-none bg-orange-400 hover:bg-orange-500 p-1 m-1 mb-2 rounded-lg">
+          <PrinterOutline />
+        </button>
+        <button className="m-1 mb-2 p-1 flex-none bg-green-400 hover:bg-green-600 rounded-full">
+          <RefreshOutline />
+        </button>
       </div>
 
       <table className="group w-full border-2">
@@ -106,7 +113,7 @@ export default function ResultsTable() {
                 {/* SCORES render horizontally; but we need to capture data vertically */}
                 {/* to accomodate for the timings we use USER intervention -> onclick */}
                 <td className="table-control cursor-pointer" onClick={showFinalRanks}>
-                  {finalRanks.length !== 0 ? finalRanks[conIndex] : "Click Me"}
+                  {finalRanks.length !== 0 ? finalRanks[conIndex] : "Click to show"}
                 </td>
               </tr>
             );
@@ -129,7 +136,12 @@ function THeadBuilder({ lists }) {
         {lists.cris.data.map((i) => {
           return (
             <th key={i.id} className="table-control-th" colSpan={lists.juds.data.length}>
-              {i.attributes.name}
+              <div className="flex">
+                <span className="flex-auto tracking-widest">{i.attributes.name}</span>
+                <button className="flex-none bg-orange-400 hover:bg-orange-500 p-1 rounded-lg">
+                  <PrinterOutline />
+                </button>
+              </div>
             </th>
           );
         })}

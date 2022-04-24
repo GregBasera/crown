@@ -16,6 +16,10 @@ export default function FinalistTable() {
     getFinalistScores(setScores);
   }, []);
 
+  const refreshTable = () => {
+    getRawFinalistData(setCons);
+    getFinalistScores(setScores);
+  };
   const distRanks = (q, w, e) => {
     // mini drills
     let criFiltered = scores.filter((el) => el.attributes.cri === w);
@@ -48,6 +52,9 @@ export default function FinalistTable() {
     // });
     // updateRawFinalistData(newFinalList);
   };
+  const prepPrintFinalTable = (e) => {
+    localStorage.setItem("tobePrinted", JSON.stringify({ cri: e }));
+  };
 
   return (
     // className="border rounded-md p-2 mt-2 border-gray-200 bg-white"
@@ -65,10 +72,14 @@ export default function FinalistTable() {
             <small>Show Raw Scores</small>
           </label>
         </div>
-        <button className="flex-none bg-orange-400 hover:bg-orange-500 p-1 m-1 mb-2 rounded-lg">
+        <a
+          href="/reports"
+          target="_blank"
+          className="flex-none bg-orange-400 hover:bg-orange-500 p-1 m-1 mb-2 rounded-lg"
+          onClick={() => prepPrintFinalTable("-1")}>
           <PrinterOutline />
-        </button>
-        <button className="m-1 mb-2 p-1 flex-none bg-green-400 hover:bg-green-600 rounded-full">
+        </a>
+        <button className="m-1 mb-2 p-1 flex-none bg-green-400 hover:bg-green-600 rounded-full" onClick={refreshTable}>
           <RefreshOutline />
         </button>
       </div>

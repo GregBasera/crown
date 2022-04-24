@@ -16,6 +16,11 @@ export default function ResultsTable() {
     getMisc(null, null, setFinalList);
   }, []);
 
+  const refreshTable = () => {
+    getAllLists(setAllList);
+    getAllScores(setScores);
+    getMisc(null, null, setFinalList);
+  };
   const distRanks = (q, w, e) => {
     // mini drills
     let criFiltered = scores.filter((el) => el.attributes.cri === w);
@@ -48,8 +53,12 @@ export default function ResultsTable() {
     });
     updateRawFinalistData(newFinalList);
   };
+  const prepPrintFullTable = () => {
+    localStorage.setItem("tobePrinted", JSON.stringify({ cri: "all" }));
+  };
 
-  if (scores.length === 0) return null;
+  if (scores.length === 0)
+    return <div className="italic">---No Scores found; Tables will generate when scores are found---</div>;
   return (
     <div className="border rounded-md p-2 mt-2 border-gray-200 bg-white">
       <div className="flex">
@@ -65,10 +74,14 @@ export default function ResultsTable() {
             <small>Show Raw Scores</small>
           </label>
         </div>
-        <button className="flex-none bg-orange-400 hover:bg-orange-500 p-1 m-1 mb-2 rounded-lg">
+        <a
+          href="/reports"
+          target="_blank"
+          className="flex-none bg-orange-400 hover:bg-orange-500 p-1 m-1 mb-2 rounded-lg cursor-pointer"
+          onClick={prepPrintFullTable}>
           <PrinterOutline />
-        </button>
-        <button className="m-1 mb-2 p-1 flex-none bg-green-400 hover:bg-green-600 rounded-full">
+        </a>
+        <button className="m-1 mb-2 p-1 flex-none bg-green-400 hover:bg-green-600 rounded-full" onClick={refreshTable}>
           <RefreshOutline />
         </button>
       </div>
@@ -83,11 +96,7 @@ export default function ResultsTable() {
 
             return (
               <tr key={i.id} className="table-control">
-                {showRawScores ? (
-                  <th className="table-control-th">{i.attributes.name}</th>
-                ) : (
-                  <th className="table-control-th">{`N.${i.attributes.con_number}`}</th>
-                )}
+                <th className="table-control-th">{`N.${i.attributes.con_number}`}</th>
 
                 {allList.cris.data.map((w) => {
                   let criFiltered = conFiltered.filter((el) => el.attributes.cri === w.id); // mini drill
@@ -127,6 +136,10 @@ export default function ResultsTable() {
 }
 
 function THeadBuilder({ lists }) {
+  const prepPrintCrisTable = (c) => {
+    localStorage.setItem("tobePrinted", JSON.stringify({ cri: c }));
+  };
+
   return (
     <thead>
       <tr className="table-control">
@@ -138,9 +151,13 @@ function THeadBuilder({ lists }) {
             <th key={i.id} className="table-control-th" colSpan={lists.juds.data.length}>
               <div className="flex">
                 <span className="flex-auto tracking-widest">{i.attributes.name}</span>
-                <button className="flex-none bg-orange-400 hover:bg-orange-500 p-1 rounded-lg">
+                <a
+                  href="/reports"
+                  target="_blank"
+                  className="flex-none bg-orange-400 hover:bg-orange-500 p-1 rounded-lg cursor-pointer"
+                  onClick={() => prepPrintCrisTable(i.id)}>
                   <PrinterOutline />
-                </button>
+                </a>
               </div>
             </th>
           );

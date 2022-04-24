@@ -148,7 +148,7 @@ export function getAllLists(callback) {
     });
 }
 
-export function getMisc(callback1, callback2, callback3) {
+export function getMisc(callback1, callback2, callback3, callback4) {
   axios({
     url: gqlendpoint,
     method: "POST",
@@ -156,6 +156,7 @@ export function getMisc(callback1, callback2, callback3) {
       query: `query{
         misc{ data {
           attributes{
+            contest_name
             client_token
             server_token
             finalist_number
@@ -169,6 +170,7 @@ export function getMisc(callback1, callback2, callback3) {
         callback1 && callback1(res.data.data.misc.data.attributes.client_token);
         callback2 && callback2(res.data.data.misc.data.attributes.server_token);
         callback3 && callback3(res.data.data.misc.data.attributes.finalist_number);
+        callback4 && callback4(res.data.data.misc.data.attributes.contest_name);
       } else {
         console.log(res);
       }
@@ -178,13 +180,13 @@ export function getMisc(callback1, callback2, callback3) {
     });
 }
 
-export function updateMisc(client_token, server_token, finalistNum) {
+export function updateMisc(client_token, server_token, finalistNum, contest_name) {
   axios({
     url: gqlendpoint,
     method: "POST",
     data: {
       query: `mutation{
-        updateMisc(data: { client_token: "${client_token}", server_token: "${server_token}", finalist_number: ${finalistNum} }) {
+        updateMisc(data: { client_token: "${client_token}", server_token: "${server_token}", finalist_number: ${finalistNum}, contest_name: "${contest_name}" }) {
           data{
             attributes{
               client_token

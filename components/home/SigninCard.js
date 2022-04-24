@@ -8,7 +8,7 @@ export default function SigninCard() {
   const [refToken, setRefToken] = useState(null);
   const [refTokenServer, setRefTokenServer] = useState(null);
   const [judNum, setJudNum] = useState(null);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState("");
   const [btnText, setBtnText] = useState("Proceed");
   const router = useRouter();
   useEffect(() => {

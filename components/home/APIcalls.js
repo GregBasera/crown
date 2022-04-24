@@ -20,8 +20,13 @@ export function getToken(callback1, callback2) {
   })
     .then((res) => {
       if (res.status === 200) {
-        callback1(res.data.data.misc.data.attributes.client_token);
-        callback2(res.data.data.misc.data.attributes.server_token);
+        if (res.data.data.misc.data === null) {
+          callback1("...nope..."); // for when database is new
+          callback2(""); // for when database is new
+        } else {
+          callback1(res.data.data.misc.data.attributes.client_token);
+          callback2(res.data.data.misc.data.attributes.server_token);
+        }
       } else {
         console.log(res);
       }

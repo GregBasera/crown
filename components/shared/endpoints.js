@@ -1,4 +1,4 @@
-export const base = "http://localhost:1337/";
+export const base = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:1337/`;
 export const gqlendpoint = `${base}graphql/`;
 
 export const cons = `${base}api/cons`;

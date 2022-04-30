@@ -1,22 +1,15 @@
 import axios from "axios";
-import { gqlendpoint } from "../shared/endpoints";
+import { gqlendpoint, axiosObjectSkeleton } from "../shared/endpoints";
 
 export function getList(endpoint, callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{
-        ${endpoint}s{ data{
-          id
-          attributes{
-            ${endpoint === "con" ? "con_number" : ""}
-            name
-          }}
-        }
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "query",
+      coll: `${endpoint}s`,
+      id: true,
+      attr: `${endpoint === "con" ? "con_number" : ""} name`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         callback(res.data.data[`${endpoint}s`].data);
@@ -30,24 +23,15 @@ export function getList(endpoint, callback) {
 }
 
 export function createListItem(data, endpoint, callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `
-        mutation{
-          create${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}(data: {name: "${data}"}){
-            data{
-              id
-              attributes{
-                name
-              }
-            }
-          }
-        }
-      `,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "mutation",
+      coll: `create${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}`,
+      id: true,
+      attr: "name",
+      collAttrs: `(data: {name: "${data}"})`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         callback(res.data.data[`create${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}`].data);
@@ -61,17 +45,15 @@ export function createListItem(data, endpoint, callback) {
 }
 
 export function delListItem(dbID, listIndex, endpoint, callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `mutation{
-        delete${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}(id: ${dbID}){ data{
-          id
-        }}
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "mutation",
+      coll: `delete${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}`,
+      id: true,
+      attr: "",
+      collAttrs: `(id: ${dbID})`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         callback(listIndex);
@@ -85,21 +67,15 @@ export function delListItem(dbID, listIndex, endpoint, callback) {
 }
 
 export function updateListItem(data1, data2, dbID, endpoint, callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `mutation{
-        update${
-          endpoint.charAt(0).toUpperCase() + endpoint.slice(1)
-        }(id: ${dbID}, data: { name: "${data1}", con_number: ${data2} }) {
-          data{
-            id
-          }
-        }
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "mutation",
+      coll: `update${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}`,
+      id: true,
+      attr: "",
+      collAttrs: `(id: ${dbID}, data: { name: "${data1}", con_number: ${data2} })`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         callback();
@@ -112,6 +88,7 @@ export function updateListItem(data1, data2, dbID, endpoint, callback) {
     });
 }
 
+// cant use Skeleton here
 export function getAllLists(callback) {
   axios({
     url: gqlendpoint,
@@ -149,22 +126,14 @@ export function getAllLists(callback) {
 }
 
 export function getMisc(callback1, callback2, callback3, callback4) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{
-        misc{ data {
-          attributes{
-            contest_name
-            client_token
-            server_token
-            finalist_number
-          }
-        }}
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "query",
+      coll: "misc",
+      id: false,
+      attr: "contest_name client_token server_token finalist_number",
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         callback1 && callback1(res.data.data.misc.data.attributes.client_token);
@@ -181,21 +150,15 @@ export function getMisc(callback1, callback2, callback3, callback4) {
 }
 
 export function updateMisc(client_token, server_token, finalistNum, contest_name) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `mutation{
-        updateMisc(data: { client_token: "${client_token}", server_token: "${server_token}", finalist_number: ${finalistNum}, contest_name: "${contest_name}" }) {
-          data{
-            attributes{
-              client_token
-            }
-          }
-        }
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "mutation",
+      coll: "updateMisc",
+      id: false,
+      attr: "client_token",
+      collAttrs: `(data: { client_token: "${client_token}", server_token: "${server_token}", finalist_number: ${finalistNum}, contest_name: "${contest_name}" })`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         // ignore
@@ -209,23 +172,14 @@ export function updateMisc(client_token, server_token, finalistNum, contest_name
 }
 
 export function getAllScores(callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{
-        scores{
-          data{
-            id
-            attributes{
-              con jud cri
-              raw_score
-            }
-          }
-        }
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "query",
+      coll: "scores",
+      id: true,
+      attr: "con jud cri raw_score",
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         callback(res.data.data.scores.data);
@@ -239,15 +193,14 @@ export function getAllScores(callback) {
 }
 
 export function getRawFinalistData(callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{ misc{ data{
-        attributes{ rawFinalistData }
-      }}}`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "query",
+      coll: "misc",
+      id: false,
+      attr: "rawFinalistData",
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         let conFinalistIDs = res.data.data.misc.data.attributes.rawFinalistData;
@@ -281,21 +234,15 @@ export function getRawFinalistData(callback) {
 }
 
 export function updateRawFinalistData(data) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `mutation{
-        updateMisc(data: { rawFinalistData: "${data}" }) {
-          data{
-            attributes{
-              rawFinalistData
-            }
-          }
-        }
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "mutation",
+      coll: "updateMisc",
+      id: false,
+      attr: "rawFinalistData",
+      collAttrs: `(data: { rawFinalistData: "${data}" })`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         // ignore
@@ -309,19 +256,15 @@ export function updateRawFinalistData(data) {
 }
 
 export function getFinalistScores(callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{
-        scores(filters: { cri: { eq: "-1" } }) {
-          data { id attributes {
-            con jud cri raw_score
-          }}
-        }
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "query",
+      coll: "scores",
+      id: true,
+      attr: "con jud cri raw_score",
+      collAttrs: `(filters: { cri: { eq: "-1" } })`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         callback(res.data.data.scores.data);

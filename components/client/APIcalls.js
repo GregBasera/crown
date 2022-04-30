@@ -1,21 +1,8 @@
 import axios from "axios";
-import { gqlendpoint } from "../shared/endpoints";
+import { axiosObjectSkeleton } from "../shared/endpoints";
 
 export function getCris(callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{
-        cris{ data{
-          id
-          attributes{
-            name
-          }
-        }}
-      }`,
-    },
-  })
+  axios(axiosObjectSkeleton({ type: "query", coll: "cris", id: true, attr: "name" }))
     .then((res) => {
       if (res.status === 200) {
         callback(res.data.data.cris.data);
@@ -29,21 +16,15 @@ export function getCris(callback) {
 }
 
 export function getCons(callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{
-        cons(sort: "con_number:asc") { data{
-          id
-          attributes{
-            con_number
-            name
-          }
-        }}
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "query",
+      coll: "cons",
+      id: true,
+      attr: "con_number name",
+      collAttrs: `(sort: "con_number:asc")`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         callback(res.data.data.cons.data);
@@ -57,21 +38,15 @@ export function getCons(callback) {
 }
 
 export function getScores(cris, juds, callback1, callback2) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{
-        scores(filters: { cri: { eq: "${cris}" }, jud: { eq: "${juds}" } }, sort: "con:asc") { data{
-          id
-          attributes{
-            con cri jud
-            raw_score
-          }
-        }}
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "query",
+      coll: "scores",
+      id: true,
+      attr: "con cri jud raw_score",
+      collAttrs: `(filters: { cri: { eq: "${cris}" }, jud: { eq: "${juds}" } }, sort: "con:asc")`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         callback1(res.data.data.scores.data);
@@ -92,17 +67,15 @@ export function getScores(cris, juds, callback1, callback2) {
 }
 
 export function createScores(con, cri, jud, raw_score, callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `mutation{
-        createScore(data: { con: "${con}", cri: "${cri}", jud: "${jud}", raw_score: ${raw_score} }) { data {
-          id
-        }}
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "mutation",
+      coll: "createScore",
+      id: true,
+      attr: "",
+      collAttrs: `(data: { con: "${con}", cri: "${cri}", jud: "${jud}", raw_score: ${raw_score} })`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         console.log("new score store created");
@@ -116,17 +89,15 @@ export function createScores(con, cri, jud, raw_score, callback) {
 }
 
 export function updateScores(scoreID, raw_score, callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `mutation{
-        updateScore(id: "${scoreID}", data: { raw_score: ${raw_score} }) { data {
-          id
-        }}
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      type: "mutation",
+      coll: "updateScore",
+      id: true,
+      attr: "",
+      collAttrs: `(id: "${scoreID}", data: { raw_score: ${raw_score} })`,
+    })
+  )
     .then((res) => {
       if (res.status === 200) {
         console.log("a score store was updated");

@@ -1,23 +1,8 @@
 import axios from "axios";
-import { gqlendpoint } from "../shared/endpoints";
+import { axiosObjectSkeleton } from "../shared/endpoints";
 
 export function getToken(callback1, callback2) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{
-        misc{
-          data{
-            attributes{
-              client_token
-              server_token
-            }
-          }
-        }
-      }`,
-    },
-  })
+  axios(axiosObjectSkeleton({ type: "query", coll: "misc", id: false, attr: "client_token server_token" }))
     .then((res) => {
       if (res.status === 200) {
         if (res.data.data.misc.data === null) {

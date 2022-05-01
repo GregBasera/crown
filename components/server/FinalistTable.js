@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getList, getRawFinalistData, getFinalistScores } from "./APIcalls";
 import { PrinterOutline, RefreshOutline } from "../shared/Icons";
 
-export default function FinalistTable() {
+export default function FinalistTable({ ret }) {
   const [juds, setJuds] = useState([]);
   const [cons, setCons] = useState([]);
   const [scores, setScores] = useState([]);
@@ -56,6 +56,7 @@ export default function FinalistTable() {
     localStorage.setItem("tobePrinted", JSON.stringify({ cri: e }));
   };
 
+  if (ret) return null;
   return (
     // className="border rounded-md p-2 mt-2 border-gray-200 bg-white"
     <div className="mt-4">
@@ -94,6 +95,7 @@ export default function FinalistTable() {
 
             return (
               <tr key={q.id} className="table-control">
+                <th className="table-control-th-coro">{q.attributes.con_number}</th>
                 <th className="table-control-th-coro">{q.attributes.name}</th>
 
                 {juds.map((w) => {
@@ -131,6 +133,9 @@ function THeadBuilder({ juds }) {
   return (
     <thead>
       <tr className="table-control">
+        <th className="table-control-th-coro" rowSpan={2}>
+          Num
+        </th>
         <th className="table-control-th-coro" rowSpan={2}>
           Contestants
         </th>

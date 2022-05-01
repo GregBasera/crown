@@ -10,16 +10,17 @@ export default function ResultsTable() {
   let ontheflyArray = [];
   const [finalRanks, setFinalRanks] = useState([]);
   const [finalList, setFinalList] = useState(0);
+  const [disableCoronation, setDisableCoronation] = useState(false);
   useEffect(() => {
     getAllLists(setAllList);
     getAllScores(setScores);
-    getMisc(null, null, setFinalList);
+    getMisc(null, null, setFinalList, null, setDisableCoronation);
   }, []);
 
   const refreshTable = () => {
     getAllLists(setAllList);
     getAllScores(setScores);
-    getMisc(null, null, setFinalList);
+    getMisc(null, null, setFinalList, null, setDisableCoronation);
   };
   const distRanks = (q, w, e) => {
     // mini drills
@@ -130,7 +131,7 @@ export default function ResultsTable() {
         </tbody>
       </table>
 
-      <FinalistTable />
+      <FinalistTable ret={disableCoronation} />
     </div>
   );
 }

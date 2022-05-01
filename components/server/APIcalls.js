@@ -125,13 +125,13 @@ export function getAllLists(callback) {
     });
 }
 
-export function getMisc(callback1, callback2, callback3, callback4) {
+export function getMisc(callback1, callback2, callback3, callback4, callback5) {
   axios(
     axiosObjectSkeleton({
       type: "query",
       coll: "misc",
       id: false,
-      attr: "contest_name client_token server_token finalist_number",
+      attr: "contest_name client_token server_token finalist_number disableCoronation",
     })
   )
     .then((res) => {
@@ -140,6 +140,7 @@ export function getMisc(callback1, callback2, callback3, callback4) {
         callback2 && callback2(res.data.data.misc.data.attributes.server_token);
         callback3 && callback3(res.data.data.misc.data.attributes.finalist_number);
         callback4 && callback4(res.data.data.misc.data.attributes.contest_name);
+        callback5 && callback5(res.data.data.misc.data.attributes.disableCoronation);
       } else {
         console.log(res);
       }
@@ -149,14 +150,15 @@ export function getMisc(callback1, callback2, callback3, callback4) {
     });
 }
 
-export function updateMisc(client_token, server_token, finalistNum, contest_name) {
+// export function updateMisc(client_token, server_token, finalistNum, contest_name) {
+export function updateMisc(id, data) {
   axios(
     axiosObjectSkeleton({
       type: "mutation",
       coll: "updateMisc",
       id: false,
       attr: "client_token",
-      collAttrs: `(data: { client_token: "${client_token}", server_token: "${server_token}", finalist_number: ${finalistNum}, contest_name: "${contest_name}" })`,
+      collAttrs: `(data: { ${id}: ${data} })`,
     })
   )
     .then((res) => {

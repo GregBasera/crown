@@ -7,28 +7,39 @@ export default function MiscMaker({ title }) {
   const [clientToken, setClientToken] = useState("");
   const [serverToken, setServerToken] = useState("");
   const [finalistNum, setFinalistNum] = useState(0);
+  const [disableCoronation, setDisableCoronation] = useState(false);
   useEffect(() => {
-    getMisc(setClientToken, setServerToken, setFinalistNum, setContestName);
+    getMisc(setClientToken, setServerToken, setFinalistNum, setContestName, setDisableCoronation);
   }, []);
 
   const refreshList = () => {
     getMisc(setClientToken);
   };
-  const contestNameChanges = (e) => {
-    setContestName(e.target.value);
-    updateMisc(clientToken, serverToken, finalistNum, e.target.value);
-  };
-  const clientTokenChanges = (e) => {
-    setClientToken(e.target.value);
-    updateMisc(e.target.value, serverToken, finalistNum, contestName);
-  };
-  const serverTokenChanges = (e) => {
-    setServerToken(e.target.value);
-    updateMisc(clientToken, e.target.value, finalistNum, contestName);
-  };
-  const finalistNumChanges = (e) => {
-    setFinalistNum(e.target.value);
-    updateMisc(clientToken, serverToken, e.target.value, contestName);
+  const miscChanges = (e, id) => {
+    switch (id) {
+      case "contest_name":
+        setContestName(e.target.value);
+        updateMisc(id, `"${e.target.value}"`);
+        break;
+      case "client_token":
+        setClientToken(e.target.value);
+        updateMisc(id, `"${e.target.value}"`);
+        break;
+      case "server_token":
+        setServerToken(e.target.value);
+        updateMisc(id, `"${e.target.value}"`);
+        break;
+      case "finalist_number":
+        setFinalistNum(e.target.value);
+        updateMisc(id, e.target.value);
+        break;
+      case "disableCoronation":
+        setDisableCoronation(e.target.checked);
+        updateMisc(id, e.target.checked);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -45,42 +56,56 @@ export default function MiscMaker({ title }) {
         <small className="mx-4">Contest Name</small>
         <div className="flex items-center mx-3 mb-1">
           <div className="flex-auto">
-            <TextInput value={contestName} onChange={contestNameChanges} />
+            <TextInput value={contestName} onChange={miscChanges} id="contest_name" />
           </div>
         </div>
 
         <small className="mx-4">Client Token</small>
         <div className="flex items-center mx-3 mb-1">
           <div className="flex-auto">
-            <TextInput value={clientToken} onChange={clientTokenChanges} />
+            <TextInput value={clientToken} onChange={miscChanges} id="client_token" />
           </div>
         </div>
 
         <small className="mx-4">Server Token</small>
         <div className="flex items-center mx-3 mb-1">
           <div className="flex-auto">
-            <TextInput value={serverToken} onChange={serverTokenChanges} />
+            <TextInput value={serverToken} onChange={miscChanges} id="server_token" />
           </div>
         </div>
 
         <small className="mx-4">Number of Finalists</small>
         <div className="flex items-center mx-3 mb-1">
           <div className="flex-auto">
-            <TextInput value={finalistNum} onChange={finalistNumChanges} />
+            <TextInput value={finalistNum} onChange={miscChanges} id="finalist_number" />
           </div>
+        </div>
+
+        <div className="form-check mx-3 mb-1">
+          <input
+            className="cursor-pointer"
+            type="checkbox"
+            checked={disableCoronation}
+            id="disableCoronation"
+            onChange={() => miscChanges(event, "disableCoronation")}
+          />
+          <label className="inline-block cursor-pointer ml-1" htmlFor="disableCoronation">
+            <small>Disable Coronation</small>
+          </label>
         </div>
       </div>
     </div>
   );
 }
 
-function TextInput({ value, onChange, indx }) {
+function TextInput({ value, onChange, id }) {
   return (
     <input
       className="border border-black focus:outline-none block w-full px-3 py-1 rounded-md text-right"
       type="text"
+      id={id}
       value={value}
-      onChange={() => onChange(event, indx, "name")}
+      onChange={() => onChange(event, id)}
     />
   );
 }

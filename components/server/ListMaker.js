@@ -23,6 +23,7 @@ export default function ListMaker({ title, endpoint }) {
   const listChanges = (e, i, q) => {
     let copy = list.slice();
     if (q === "cnum") copy[i].attributes.con_number = e.target.value;
+    if (q === "jnum") copy[i].attributes.jud_number = e.target.value;
     if (q === "name") copy[i].attributes.name = e.target.value;
     setList(copy);
     setFocused(i);
@@ -30,7 +31,7 @@ export default function ListMaker({ title, endpoint }) {
   const sendUpdate = (listIndex, dbID) => {
     updateListItem(
       list[focused].attributes.name,
-      list[focused].attributes.con_number,
+      list[focused].attributes.con_number ?? list[focused].attributes.jud_number,
       dbID,
       title.toLowerCase().substring(0, 3),
       cancelUpdate
@@ -75,10 +76,15 @@ export default function ListMaker({ title, endpoint }) {
         {list.map((item, index) => {
           return (
             <div key={item.id} className="flex items-center mx-3 my-2">
-              {/* visible only on Contestants view */}
-              {title === "Contestants" && (
+              {/* visible only on Contestants and Judges view */}
+              {title !== "Criteria" && (
                 <div className="flex-a">
-                  <ConNumber value={item.attributes.con_number ?? 0} onChange={listChanges} indx={index} />
+                  <ConNumber
+                    value={item.attributes.con_number ?? item.attributes.jud_number ?? 0}
+                    onChange={listChanges}
+                    indx={index}
+                    name={title === "Judges" ? "jnum" : "cnum"}
+                  />
                 </div>
               )}
               {/* textfield / display --> cRud --- visible everytime */}
@@ -143,13 +149,13 @@ export default function ListMaker({ title, endpoint }) {
   );
 }
 
-function ConNumber({ value, onChange, indx }) {
+function ConNumber({ value, onChange, indx, name }) {
   return (
     <input
       className="border border-gray focus:outline-none block w-20 px-3 py-1 rounded-md"
       type="number"
       value={value}
-      onChange={() => onChange(event, indx, "cnum")}
+      onChange={() => onChange(event, indx, name)}
     />
   );
 }

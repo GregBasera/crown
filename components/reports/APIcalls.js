@@ -72,7 +72,7 @@ export function getJud(callback) {
       type: "query",
       coll: "juds",
       id: true,
-      attr: "name",
+      attr: "jud_number name",
     })
   )
     .then((res) => {

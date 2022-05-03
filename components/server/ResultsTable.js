@@ -63,7 +63,10 @@ export default function ResultsTable() {
   return (
     <div className="border rounded-md p-2 mt-2 border-gray-200 bg-white">
       <div className="flex">
-        <div className="flex-auto text-xl font-extrabold ml-1 mb-2">Results Table</div>
+        <div className="flex-none text-xl font-extrabold ml-1 mb-2">Results Table</div>
+        <div className="flex-auto text-xs ml-1 mt-1 text-slate-400">{`Showing ${
+          allList.cons.data.length * allList.juds.data.length * allList.cris.data.length
+        } values`}</div>
         <div className="form-check mr-1 mt-1">
           <input
             className="cursor-pointer"
@@ -103,8 +106,10 @@ export default function ResultsTable() {
                   let criFiltered = conFiltered.filter((el) => el.attributes.cri === w.id); // mini drill
 
                   return allList.juds.data.map((q) => {
-                    let judFiltered = criFiltered.filter((el) => el.attributes.jud === q.id); // mini drill
-                    let temp = distRanks(i.attributes.con_number.toString(), w.id, q.id);
+                    let judFiltered = criFiltered.filter(
+                      (el) => el.attributes.jud === q.attributes.jud_number.toString()
+                    ); // mini drill
+                    let temp = distRanks(i.attributes.con_number.toString(), w.id, q.attributes.jud_number.toString());
                     lowerIsBetter += Number.isInteger(temp) ? temp : 0;
 
                     return showRawScores ? (
@@ -113,7 +118,7 @@ export default function ResultsTable() {
                       </td>
                     ) : (
                       <td key={q.id} className="table-control">
-                        {distRanks(i.attributes.con_number.toString(), w.id, q.id)}
+                        {distRanks(i.attributes.con_number.toString(), w.id, q.attributes.jud_number.toString())}
                       </td>
                     );
                   });
@@ -175,7 +180,7 @@ function THeadBuilder({ lists }) {
           return lists.juds.data.map((i) => {
             return (
               <th key={i.id} className="table-control-th">
-                {i.id}
+                {i.attributes.jud_number ?? 0}
               </th>
             );
           });

@@ -37,11 +37,11 @@ export default function Body() {
     let x = "";
     switch (q) {
       case 1:
-        return <span className="text-blue-500">1st</span>;
+        return <span className="text-blue-800">1st</span>;
       case 2:
-        return <span className="text-blue-500">2nd</span>;
+        return <span className="text-blue-800">2nd</span>;
       case 3:
-        return <span className="text-blue-500">3rd</span>;
+        return <span className="text-blue-800">3rd</span>;
       default:
         return <span>{`${q}th`}</span>;
     }
@@ -82,7 +82,7 @@ export default function Body() {
             {jud.map((e) => {
               return (
                 <th key={e.id} className="table-control-th">
-                  {`Jud.${e.id}`}
+                  {`Jud.${e.attributes.jud_number}`}
                 </th>
               );
             })}
@@ -110,13 +110,13 @@ export default function Body() {
                         w.id,
                         e.attributes.con_number.toString()
                       )}`} */}
-                      {ordinals(distRanks(w.id, e.attributes.con_number.toString()))}
+                      {ordinals(distRanks(w.attributes.jud_number.toString(), e.attributes.con_number.toString()))}
                     </td>
                   );
                 })}
 
                 <td className="table-control">{passbyCopy(lowerIsBetter)}</td>
-                <td className="table-control cursor-pointer" onClick={showFinalRanks}>
+                <td className="table-control cursor-pointer bg-orange-300" onClick={showFinalRanks}>
                   {finalRanks.length !== 0 ? ordinals(finalRanks[conIndex]) : "Click to show"}
                 </td>
               </tr>
@@ -133,8 +133,9 @@ export default function Body() {
           <tr>
             {jud.map((e) => {
               return (
-                <th key={e.id} className="overline">
-                  {e.attributes.name}
+                <th key={e.id}>
+                  <div className="overline">{e.attributes.name}</div>
+                  <span className="text-sm text-gray-400">{`Judge #${e.attributes.jud_number}`}</span>
                 </th>
               );
             })}

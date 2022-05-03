@@ -99,8 +99,10 @@ export default function FinalistTable({ ret }) {
                 <th className="table-control-th-coro">{q.attributes.name}</th>
 
                 {juds.map((w) => {
-                  let judFiltered = conFiltered.filter((el) => el.attributes.jud === w.id); // mini drill
-                  let temp = distRanks(q.attributes.con_number.toString(), "-1", w.id);
+                  let judFiltered = conFiltered.filter(
+                    (el) => el.attributes.jud === w.attributes.jud_number.toString()
+                  ); // mini drill
+                  let temp = distRanks(q.attributes.con_number.toString(), "-1", w.attributes.jud_number.toString());
                   lowerIsBetter += Number.isInteger(temp) ? temp : 0;
 
                   return showRawScores ? (
@@ -109,7 +111,7 @@ export default function FinalistTable({ ret }) {
                     </td>
                   ) : (
                     <td key={w.id} className="table-control">
-                      {distRanks(q.attributes.con_number.toString(), "-1", w.id)}
+                      {distRanks(q.attributes.con_number.toString(), "-1", w.attributes.jud_number.toString())}
                     </td>
                   );
                 })}
@@ -153,7 +155,7 @@ function THeadBuilder({ juds }) {
         {juds.map((i) => {
           return (
             <th key={i.id} className="table-control-th-coro">
-              {i.id}
+              {i.attributes.jud_number}
             </th>
           );
         })}

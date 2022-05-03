@@ -7,7 +7,7 @@ export function getList(endpoint, callback) {
       type: "query",
       coll: `${endpoint}s`,
       id: true,
-      attr: `${endpoint === "con" ? "con_number" : ""} name`,
+      attr: `${endpoint === "con" ? "con_number" : ""} ${endpoint === "jud" ? "jud_number" : ""} name`,
     })
   )
     .then((res) => {
@@ -73,7 +73,9 @@ export function updateListItem(data1, data2, dbID, endpoint, callback) {
       coll: `update${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}`,
       id: true,
       attr: "",
-      collAttrs: `(id: ${dbID}, data: { name: "${data1}", con_number: ${data2} })`,
+      collAttrs: `(id: ${dbID}, data: { name: "${data1}", ${
+        endpoint === "con" ? "con_number" : "jud_number"
+      }: ${data2} })`,
     })
   )
     .then((res) => {
@@ -105,6 +107,7 @@ export function getAllLists(callback) {
         juds{ data{
           id
           attributes{
+            jud_number
             name
           }
         }}
@@ -150,7 +153,6 @@ export function getMisc(callback1, callback2, callback3, callback4, callback5) {
     });
 }
 
-// export function updateMisc(client_token, server_token, finalistNum, contest_name) {
 export function updateMisc(id, data) {
   axios(
     axiosObjectSkeleton({
@@ -180,6 +182,7 @@ export function getAllScores(callback) {
       coll: "scores",
       id: true,
       attr: "con jud cri raw_score",
+      collAttrs: `(pagination: {limit: 100})`,
     })
   )
     .then((res) => {

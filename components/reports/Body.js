@@ -134,7 +134,8 @@ export default function Body() {
             {jud.map((e) => {
               return (
                 <th key={e.id}>
-                  <div className="overline">{e.attributes.name}</div>
+                  <hr className="border-1 border-black mx-3" />
+                  <div>{e.attributes.name}</div>
                   <span className="text-sm text-gray-400">{`Judge #${e.attributes.jud_number}`}</span>
                 </th>
               );

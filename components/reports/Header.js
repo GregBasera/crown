@@ -6,7 +6,11 @@ export default function Header() {
   const [criDetail, setCriDetail] = useState({ attributes: { name: "Coronation" } });
   useEffect(() => {
     getContestName(setContestName);
-    getCri(JSON.parse(localStorage.getItem("tobePrinted")).cri, setCriDetail);
+    if (JSON.parse(localStorage.getItem("tobePrinted")).cri !== "all") {
+      getCri(JSON.parse(localStorage.getItem("tobePrinted")).cri, setCriDetail);
+    } else {
+      setCriDetail({ attributes: { name: "All Criteria" } });
+    }
   }, []);
 
   return (

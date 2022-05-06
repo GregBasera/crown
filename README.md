@@ -3,7 +3,7 @@
 </p>
 
 <h3 align="center">A tallying system for beauty pageants or other similar contests.</h3>
-<p align="center">For when you have to keep track of 3 entities: Contentants, Judges, and Criteria; at the same time keep Score and Rank them.</p>
+<p align="center">For when you have to keep track of 3 entities: Contentants, Judges, and Criteria; at the same time keep Scores and Rank them.</p>
 
 ## Deployment
 
@@ -23,19 +23,16 @@ See `docker-compose.yml` file example below.
 version: "3"
 services:
   next:
-    image: gregbasera/crown:2.0
-    environment:
-      # the server's IP; can't be localhost; example:
-      # - NEXT_PUBLIC_SERVER_HOST=0.0.0.0
-      - NEXT_PUBLIC_SERVER_HOST=<put-server-IP-here>
+    container_name: crown
+    image: gregbasera/crown:test
     ports:
       - "3000:3000"
     depends_on:
       - "data"
 
   data:
-    # image: gregbasera/crowndb:strapi4.1.8
-    image: gregbasera/crowndb:sm
+    container_name: crowndb
+    image: gregbasera/crowndb:1.1
     volumes:
       - ./database:/usr/src/app/.tmp
     ports:
@@ -60,11 +57,11 @@ Proceed to _Settings > Users & Permissions plugin > Roles > Public_
 
 Tick/Allow all permissions for **Con**, **Cri**, **Jud**, **Score**, and **Misc**.
 
-**Save** it.
-
 <p align="center">
   <img src="picsReadme/permissions.png" width="418px" alt="Strapi logo" />
 </p>
+
+**Save** it.
 
 If everything goes well, you should be able to go to [localhost](http://localhost:3000/) and login.
 
@@ -84,11 +81,29 @@ At first init you should be able to just click on _Proceed_ and reach the server
   - Work-arounds:
     - you can full-screen the browser with F11
     - you can zoom-out the browser and sacrifice readability
-      - Firefox and Chrome can zoom-out down to 30% and 25% respectively with Ctrl-Scroll-down
+      - Firefox and Chrome can zoom-out down to 30% and 25% respectively
     - you can use a bigger monitor, a wide-screen TV or even a projector and scale it better.
 - Judges can only score in the scale of 1-10; 1 the lowest, 10 the highest; decimal notation not allowed.
-- Computations are done using a _rank-based_ system. [Learn more](#computations).
-- _Coronation_ (if enabled) will not take into account scores from any _Criteria_. [Learn more](#final-segment).
+  - Criteria can not hold any modifying value or weights. All scores are taken purely as a scale from 1-10
+- Computations are done using a _rank-based_ system.
+  - Each Judge have their own preference on how he/she scores Contestants from scale of 1-10.
+  - The system ranks scores per judge. This removes personal biases from each judge.
+  - The ranking generated is then used to calculate for the results.
+- _Coronation_ (if enabled) will not take into account any scores from any _Criteria_.
+  - the last criteria, _Coronation_, is built-in by default. This is an entirely seperate criteria
+  - In a way, you can say that any Contestant who enters _Coronation_ starts again from 0
+- _Ties_ are ALWAYS honored by the system.
+  - if there are 5 Contestants that received the 1st place, the system will tell you as is.
+
+## Basic Troubleshooting
+
+- Command below to stop the Docker Container
+
+```bash
+docker compose down
+```
+
+- Delete the "database" directory created during _compose up_ to reset the whole database. **Make sure the Container is not running before you delete.** When the Container launched again it will create a fresh database.
 
 ### Questions and Feedback
 

@@ -90,36 +90,16 @@ export function updateListItem(data1, data2, dbID, endpoint, callback) {
     });
 }
 
-// cant use Skeleton here
 export function getAllLists(callback) {
-  axios({
-    url: gqlendpoint,
-    method: "POST",
-    data: {
-      query: `query{
-        cons{ data{
-          id
-          attributes{
-            con_number
-            name
-          }
-        }}
-        juds{ data{
-          id
-          attributes{
-            jud_number
-            name
-          }
-        }}
-        cris{ data{
-          id
-          attributes{
-            name
-          }
-        }}
-      }`,
-    },
-  })
+  axios(
+    axiosObjectSkeleton({
+      queryOverride: `query{
+      cons{ data{ id attributes{ con_number name } }}
+      juds{ data{ id attributes{ jud_number name } }}
+      cris{ data{ id attributes{ name } }}
+    }`,
+    })
+  )
     .then((res) => {
       callback(res.data.data);
     })

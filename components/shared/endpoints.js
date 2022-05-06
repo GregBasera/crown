@@ -1,4 +1,4 @@
-export const base = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:1337/`;
+export const base = `http://localhost:1337/`;
 export const gqlendpoint = `${base}graphql/`;
 
 export const cons = `${base}api/cons`;
@@ -12,14 +12,17 @@ export function axiosObjectSkeleton(obj) {
   // attr - optional - string; list of attr to be returned
   // id - optional - boolean; if record "id" needs to be returned
   // collAttrs - optional - string; filters, sorts, etc. params for "coll"
+  // queryOverride - optional - string; if queryOveride is defined all other attr is disregarded
 
   let collAttrs = obj.collAttrs ? obj.collAttrs : "";
   let attr = obj.attr ? `attributes{ ${obj.attr} }` : "";
   let tobeReturned = {
-    url: gqlendpoint,
+    // this is called inventing-the-wheel-while-the-car-is-running
+    url: `http://${window.location.hostname}:1337/graphql/`,
+    // this is fucked. I dont like it. ^
     method: "POST",
     data: {
-      query: `${obj.type}{ ${obj.coll + collAttrs}{ data{ ${obj.id ? "id" : ""} ${attr} } } }`,
+      query: obj.queryOverride ?? `${obj.type}{ ${obj.coll + collAttrs}{ data{ ${obj.id ? "id" : ""} ${attr} } } }`,
     },
   };
 

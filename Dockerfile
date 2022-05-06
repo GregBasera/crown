@@ -16,9 +16,9 @@ RUN npm run build
 # used to configure the runtime environment of the Next.js app
 FROM node:lts-alpine3.15 as runner
 WORKDIR /usr/src/app
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # If you are using a custom next.config.js file, uncomment this line.
-# COPY --from=builder /my-project/next.config.js ./
+# COPY --from=builder /usr/src/app/next.config.js ./
 COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/.next ./.next
 COPY --from=builder /usr/src/app/node_modules ./node_modules

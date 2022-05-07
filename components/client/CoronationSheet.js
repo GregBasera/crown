@@ -37,6 +37,7 @@ export default function CoronationSheet({ fp }) {
   if (fp) return <div className="italic text-red-500 tracking-widest">--- Select a Segment ---</div>;
   return (
     <div>
+      <div>theres a bug here</div>
       {cons.map((q) => {
         return (
           <div key={q.id} className="flex mb-1" title={q.attributes.name}>

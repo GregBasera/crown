@@ -38,13 +38,14 @@ export function getCons(callback) {
 }
 
 export function getScores(cris, juds, callback1, callback2) {
+  console.log(cris, juds);
   axios(
     axiosObjectSkeleton({
       type: "query",
       coll: "scores",
       id: true,
       attr: "con cri jud raw_score",
-      collAttrs: `(filters: { cri: { eq: "${cris}" }, jud: { eq: "${juds}" } }, sort: "con:asc")`,
+      collAttrs: `(filters: { cri: { eq: "${cris}" }, jud: { eq: "${juds}" } }, pagination: {limit: 100}, sort: "con:asc")`,
     })
   )
     .then((res) => {
@@ -101,6 +102,28 @@ export function updateScores(scoreID, raw_score, callback) {
     .then((res) => {
       if (res.status === 200) {
         console.log("a score store was updated");
+      } else {
+        console.log(res);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+export function getMisc(callback1, callback2) {
+  axios(
+    axiosObjectSkeleton({
+      type: "query",
+      coll: "misc",
+      id: false,
+      attr: "contest_name disableCoronation",
+    })
+  )
+    .then((res) => {
+      if (res.status === 200) {
+        callback1 && callback1(res.data.data.misc.data.attributes.contest_name);
+        callback2 && callback2(res.data.data.misc.data.attributes.disableCoronation);
       } else {
         console.log(res);
       }

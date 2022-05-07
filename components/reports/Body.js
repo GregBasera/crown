@@ -101,7 +101,7 @@ export default function Body() {
 
                 {jud.map((w) => {
                   // let judFiltered = conFiltered.filter((el) => el.attributes.jud === w.id);
-                  let temp = distRanks(w.id, e.attributes.con_number.toString());
+                  let temp = distRanks(w.attributes.jud_number.toString(), e.attributes.con_number.toString());
                   lowerIsBetter += Number.isInteger(temp) ? temp : 0;
 
                   return (

@@ -55,6 +55,15 @@ export default function FinalistTable({ ret }) {
   const prepPrintFinalTable = (e) => {
     localStorage.setItem("tobePrinted", JSON.stringify({ cri: e }));
   };
+  const checkRankValidity = (q, w) => {
+    // let criFiltered = scores.filter((el) => el.attributes.cri === q.id);
+    let judFiltered = scores.filter((el) => el.attributes.jud === w.attributes.jud_number.toString());
+    return (
+      <td key={w.id} className={`table-control ${judFiltered.length !== cons.length ? "bg-red-200" : "bg-green-200"}`}>
+        {judFiltered.length !== cons.length ? "✗" : "✓"}
+      </td>
+    );
+  };
 
   if (ret) return null;
   return (
@@ -125,6 +134,15 @@ export default function FinalistTable({ ret }) {
               </tr>
             );
           })}
+          <tr>
+            <td className="table-control bg-gray-300" colSpan={2}></td>
+            {juds.map((w) => {
+              return !w ? null : checkRankValidity("-1", w);
+            })}
+            <td className="table-control bg-gray-300" colSpan={2}>
+              checks
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

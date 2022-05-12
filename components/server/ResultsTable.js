@@ -57,6 +57,17 @@ export default function ResultsTable() {
   const prepPrintFullTable = () => {
     localStorage.setItem("tobePrinted", JSON.stringify({ cri: "all" }));
   };
+  const checkRankValidity = (q, w) => {
+    let criFiltered = scores.filter((el) => el.attributes.cri === q.id);
+    let judFiltered = criFiltered.filter((el) => el.attributes.jud === w.attributes.jud_number.toString());
+    return (
+      <td
+        key={q.id + w.id}
+        className={`table-control ${judFiltered.length !== allList.cons.data.length ? "bg-red-200" : "bg-green-200"}`}>
+        {judFiltered.length !== allList.cons.data.length ? "✗" : "✓"}
+      </td>
+    );
+  };
 
   if (scores.length === 0)
     return <div className="italic">---No Scores found; Tables will generate when scores are found---</div>;
@@ -133,6 +144,17 @@ export default function ResultsTable() {
               </tr>
             );
           })}
+          <tr>
+            <td className="table-control bg-gray-300"></td>
+            {allList.cris.data.map((q) => {
+              return allList.juds.data.map((w) => {
+                return !q && !w ? null : checkRankValidity(q, w);
+              });
+            })}
+            <td className="table-control bg-gray-300" colSpan={2}>
+              checks
+            </td>
+          </tr>
         </tbody>
       </table>
 

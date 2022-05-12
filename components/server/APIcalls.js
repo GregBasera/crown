@@ -162,7 +162,7 @@ export function getAllScores(callback) {
       coll: "scores",
       id: true,
       attr: "con jud cri raw_score",
-      collAttrs: `(pagination: {limit: 100})`,
+      collAttrs: `(pagination: {limit: 200})`,
     })
   )
     .then((res) => {
@@ -190,15 +190,15 @@ export function getRawFinalistData(callback) {
       if (res.status === 200) {
         let conFinalistIDs = res.data.data.misc.data.attributes.rawFinalistData;
         // get indexes of finalists; if successful, get cons using results gotten
-        axios({
-          url: gqlendpoint,
-          method: "POST",
-          data: {
-            query: `query{ cons(filters: { id: { in: [${conFinalistIDs}] } }) {
-              data { id attributes { name con_number }
-            }}}`,
-          },
-        })
+        axios(
+          axiosObjectSkeleton({
+            type: "query",
+            coll: "cons",
+            id: true,
+            attr: "name con_number",
+            collAttrs: `(filters: { id: { in: [${conFinalistIDs}] } })`,
+          })
+        )
           .then((res1) => {
             if (res1.status === 200) {
               callback(res1.data.data.cons.data);

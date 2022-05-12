@@ -38,7 +38,6 @@ export function getCons(callback) {
 }
 
 export function getScores(cris, juds, callback1, callback2) {
-  console.log(cris, juds);
   axios(
     axiosObjectSkeleton({
       type: "query",

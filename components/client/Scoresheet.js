@@ -5,6 +5,7 @@ export default function Scoresheet({ cris }) {
   const [cons, setCons] = useState([]);
   const [scores, setScores] = useState([]);
   const [ranks, setRanks] = useState([]);
+  let newlyCreatedScore;
   useEffect(() => {
     getCons(setCons);
     getScores(cris, JSON.parse(sessionStorage.getItem("judNum")).judNum, setScores, setRanks);
@@ -19,16 +20,35 @@ export default function Scoresheet({ cris }) {
     let index = scores.indexOf(filtered[0]);
     return index > -1 ? ranks[index] : "--";
   };
+  const setNewlyCreatedScore = (str) => {
+    newlyCreatedScore = str;
+  };
   const scoreInputChanges = (e, scoreID, con, cri, jud) => {
-    if (scoreID) {
-      let copy = scores.slice(); // get a mutable copy of array
-      let filtered = copy.filter((el) => el.id === scoreID); // get the targeted element
-      copy[copy.indexOf(filtered[0])].attributes.raw_score = e.target.value; // change targeted attribute
-      setScores(copy); // push a change on the state with copy
-      updateScores(scoreID, parseInt(e.target.value));
-    } else {
-      createScores(con, cri, jud, parseInt(e.target.value));
-      getScores(cris, JSON.parse(sessionStorage.getItem("judNum")).judNum, setScores, setRanks);
+    if (e.target.value === "") {
+      // this is just to accomodate <empty string>; no update
+      let copy = scores.slice();
+      let filtered = copy.filter((el) => el.id === scoreID);
+      copy[copy.indexOf(filtered[0])].attributes.raw_score = e.target.value;
+      setScores(copy);
+    }
+    if (e.target.value >= 1 && e.target.value <= 10) {
+      if (scoreID) {
+        // scoreID is defined; this must be an update
+        let copy = scores.slice(); // get a mutable copy of array
+        let filtered = copy.filter((el) => el.id === scoreID); // get the targeted element
+        copy[copy.indexOf(filtered[0])].attributes.raw_score = e.target.value; // change targeted attribute
+        setScores(copy); // push a change on the state with copy
+        updateScores(scoreID, parseInt(e.target.value));
+      } else {
+        // scoreID is not defined; this must be a create
+        if (newlyCreatedScore !== con + cri + jud) {
+          setNewlyCreatedScore(con + cri + jud);
+          createScores(con, cri, jud, parseInt(e.target.value));
+          getScores(cris, JSON.parse(sessionStorage.getItem("judNum")).judNum, setScores, setRanks);
+        } else {
+          console.log("duplicate create prevented");
+        }
+      }
     }
   };
 

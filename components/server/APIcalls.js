@@ -1,5 +1,5 @@
 import axios from "axios";
-import { gqlendpoint, axiosObjectSkeleton } from "../shared/endpoints";
+import { paginationLimit, axiosObjectSkeleton } from "../shared/endpoints";
 
 export function getList(endpoint, callback) {
   axios(
@@ -162,7 +162,7 @@ export function getAllScores(callback) {
       coll: "scores",
       id: true,
       attr: "con jud cri raw_score",
-      collAttrs: `(pagination: {limit: 200})`,
+      collAttrs: `(pagination: {limit: ${paginationLimit}})`,
     })
   )
     .then((res) => {

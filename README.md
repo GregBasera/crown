@@ -24,7 +24,7 @@ version: "3"
 services:
   next:
     container_name: crown
-    image: gregbasera/crown:test
+    image: gregbasera/crown:2.3 # check dockerhub for updated version
     ports:
       - "3000:3000"
     depends_on:
@@ -32,7 +32,7 @@ services:
 
   data:
     container_name: crowndb
-    image: gregbasera/crowndb:1.1
+    image: gregbasera/crowndb:1.1 # check dockerhub for updated version
     volumes:
       - ./database:/usr/src/app/.tmp
     ports:
@@ -94,16 +94,15 @@ At first init you should be able to just click on _Proceed_ and reach the server
   - In a way, you can say that any Contestant who enters _Coronation_ starts again from 0
 - _Ties_ are ALWAYS honored by the system.
   - if there are 5 Contestants that received the 1st place, the system will tell you as is.
+- Strapi limits the number of entries returned per query. `PaginationLimit` is set to `4000` for a fix.
+  - if you exceed the recommended settings youll need to build a new docker-image from source and change `PaginationLimit` to something larger.
 
-## Basic Troubleshooting
+## Dev Notes
 
-- Command below to stop the Docker Container
-
-```bash
-docker compose down
-```
-
-- Delete the "database" directory created during _compose up_ to reset the whole database. **Make sure the Container is not running before you delete.** When the Container launched again it will create a fresh database.
+- I recommend disabling _Coronation_ at the start of the contest until it is needed. This is to prevent judges from accidentaly posting a score on it.
+- There is a known bug where pressing multiple keys in the client UI will trigger multiple score entries for the same criteria. This then made ranking in-effective. This was patched and a _"check"_ is put in place. But the patch is untested. If the _"check"_ caught the bug you'll need to correct it from strapi manually.
+- If you need to reset the whole database, delete the `database` directory created during _compose up_. **Make sure that the Container is not running before you delete.** When the Container launched again it will create a fresh database.
+- I realize that the system is quite declarative and it would take some workarounds to work with it. The thing is every contest is different, there's really not a standard to it.
 
 ### Questions and Feedback
 

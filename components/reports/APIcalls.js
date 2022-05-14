@@ -1,5 +1,5 @@
 import axios from "axios";
-import { gqlendpoint, axiosObjectSkeleton } from "../shared/endpoints";
+import { paginationLimit, axiosObjectSkeleton } from "../shared/endpoints";
 
 export function getSingleCri(cri, callback) {
   axios(
@@ -8,7 +8,7 @@ export function getSingleCri(cri, callback) {
       coll: "scores",
       id: true,
       attr: "con cri jud raw_score",
-      collAttrs: `(filters: { cri: { eq: "${cri}" } })`,
+      collAttrs: `(filters: { cri: { eq: "${cri}" } }, pagination: {limit: ${paginationLimit}})`,
     })
   )
     .then((res) => {

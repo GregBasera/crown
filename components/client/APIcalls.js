@@ -1,5 +1,5 @@
 import axios from "axios";
-import { axiosObjectSkeleton } from "../shared/endpoints";
+import { axiosObjectSkeleton, paginationLimit } from "../shared/endpoints";
 
 export function getCris(callback) {
   axios(axiosObjectSkeleton({ type: "query", coll: "cris", id: true, attr: "name" }))
@@ -44,7 +44,7 @@ export function getScores(cris, juds, callback1, callback2) {
       coll: "scores",
       id: true,
       attr: "con cri jud raw_score",
-      collAttrs: `(filters: { cri: { eq: "${cris}" }, jud: { eq: "${juds}" } }, pagination: {limit: 100}, sort: "con:asc")`,
+      collAttrs: `(filters: { cri: { eq: "${cris}" }, jud: { eq: "${juds}" } }, pagination: {limit: ${paginationLimit}}, sort: "con:asc")`,
     })
   )
     .then((res) => {

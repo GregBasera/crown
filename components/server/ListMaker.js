@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { RefreshOutline, TrashOuline, PencilOutline, ArrowRightOutline, CloseOutline } from "../shared/Icons";
 import { getList, createListItem, delListItem, updateListItem } from "./APIcalls";
 
-export default function ListMaker({ title, endpoint }) {
+export default function ListMaker({ title }) {
   const [list, setList] = useState([]);
   const [newListItem, setNewListItem] = useState("");
   const [addingNew, setAddingNew] = useState(false);

@@ -16,9 +16,9 @@ export default function Container() {
   return (
     <div>
       <div className="grid items-start grid-cols-4 gap-2">
-        <ListMaker title="Contestants" endpoint={cons} />
-        <ListMaker title="Judges" endpoint={juds} />
-        <ListMaker title="Criteria" endpoint={cris} />
+        <ListMaker title="Contestants" />
+        <ListMaker title="Judges" />
+        <ListMaker title="Criteria" />
         <MiscMaker title="Miscellaneous" />
       </div>
 

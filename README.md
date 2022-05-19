@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="picsReadme/crown.png" width="418px" alt="Strapi logo" />
+  <img src="picsReadme/crown.png" width="418px" alt="Crown logo" />
 </p>
 
 <h3 align="center">A tallying system for beauty pageants or other similar contests.</h3>
@@ -24,7 +24,7 @@ version: "3"
 services:
   next:
     container_name: crown
-    image: gregbasera/crown:2.3 # check dockerhub for updated version
+    image: gregbasera/crown:2.4 # check dockerhub for updated version
     ports:
       - "3000:3000"
     depends_on:
@@ -50,7 +50,7 @@ The app should be running now, but before you can use it you'll need to configur
 First create an administrator for the database. Go to [localhost](http://localhost:1337/admin)
 
 <p align="center">
-  <img src="picsReadme/admin.png" width="418px" alt="Strapi logo" />
+  <img src="picsReadme/admin.png" width="418px" alt="create admin" />
 </p>
 
 Proceed to _Settings > Users & Permissions plugin > Roles > Public_
@@ -58,7 +58,7 @@ Proceed to _Settings > Users & Permissions plugin > Roles > Public_
 Tick/Allow all permissions for **Con**, **Cri**, **Jud**, **Score**, and **Misc**.
 
 <p align="center">
-  <img src="picsReadme/permissions.png" width="418px" alt="Strapi logo" />
+  <img src="picsReadme/permissions.png" width="418px" alt="edit permissions" />
 </p>
 
 **Save** it.
@@ -104,6 +104,32 @@ At first init you should be able to just click on _Proceed_ and reach the server
 - If you need to reset the whole database, delete the `database` directory created during _compose up_. **Make sure that the Container is not running before you delete.** When the Container launched again it will create a fresh database.
 - I realize that the system is quite declarative and it would take some workarounds to work with it. The thing is every contest is different, there's really not a standard to it.
 
-### Questions and Feedback
+## Gallery
+
+The Welcome view.
+
+<p align="center">
+  <img src="picsReadme/crown-welcome-view.png" width="418px" alt="welcome view" />
+</p>
+
+The client view. The view where Judges will input scores. Its mobile-friendly
+
+<p align="center">
+  <img src="picsReadme/crown-client-view.png" width="418px" alt="welcome view" />
+</p>
+
+The server view. The Admin's view. (there is actually a bug here; in the finalist table; this is because I didn't disable Coronation at start. easily fixable)
+
+<p align="center">
+  <img src="picsReadme/crown-server-view.png" width="418px" alt="welcome view" />
+</p>
+
+The report view. printable right from the browser; with spaces so Judges can confirm and sign it.
+
+<p align="center">
+  <img src="picsReadme/crown-report-view.png" width="418px" alt="welcome view" />
+</p>
+
+## Questions and Feedback
 
 _basera.gg@gmail.com_
